@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4dbd820b2460fb49ab2290a40cb364d, type: 3}
+  m_Name: DebrisSet
+  m_EditorClassIdentifier: 
+  numDebris: 1
+  debrisSelectedEvent: {fileID: 11400000, guid: 2b5c354d59ea73040aea61c1eaca69ed, type: 2}
+  deselectEvent: {fileID: 11400000, guid: 9b960d35470041143946b8a73fe2171b, type: 2}
+  selectRandomEvent: {fileID: 11400000, guid: 38f4d6024b1684441ab017832f354a30, type: 2}
