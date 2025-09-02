@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6624522000896143843}
   - component: {fileID: 7583338486494297048}
   m_Layer: 5
-  m_Name: Template
+  m_Name: TabTemplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
