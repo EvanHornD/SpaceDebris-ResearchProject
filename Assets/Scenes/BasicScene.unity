@@ -391,7 +391,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2169634865055196231, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 160
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2169634865055196231, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2169634865055196231, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -411,7 +415,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2169634865055196231, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2169634865055196231, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -516,6 +520,22 @@ PrefabInstance:
     - target: {fileID: 7244538143339995001, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
       propertyPath: ToggleDirection
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7306448834595786493, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 16.8394
+      objectReference: {fileID: 0}
+    - target: {fileID: 7306448834595786493, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 7.5517
+      objectReference: {fileID: 0}
+    - target: {fileID: 7306448834595786493, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7306448834595786493, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000012755
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4868503914858578197, guid: fd4c3c329b2855b41a9868a3051b749e, type: 3}
