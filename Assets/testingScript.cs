@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class testingScript : MonoBehaviour
 {
-    [SerializeField] RuntimeSet<GameObject> set;
+    [SerializeField] Collection<GameObject> set;
     [SerializeField] GameObject prefab;
 
     public void Add()

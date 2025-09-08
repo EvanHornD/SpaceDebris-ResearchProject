@@ -1,0 +1,25 @@
+using UnityEngine;
+
+public class TimeSystem : MonoBehaviour
+{
+    [SerializeField] public SimulationTime time;
+
+    void Update()
+    {
+        if (time.paused) { return; }
+
+        time.changeInTime = Time.deltaTime * time.timeScale;
+        time.simulationTime = time.simulationTime.AddSeconds(time.changeInTime);
+        time.dayPercentage = (((((time.simulationTime.Second / 60f) + time.simulationTime.Minute) / 60f) + time.simulationTime.Hour) / 24f);
+    }
+
+    public void pause(bool paused)
+    {
+        time.paused = paused;
+    }
+
+    public void setTimeScale(float scale)
+    {
+        time.timeScale = scale;
+    }
+}
