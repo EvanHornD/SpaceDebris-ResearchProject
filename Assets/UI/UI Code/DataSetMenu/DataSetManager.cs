@@ -11,7 +11,7 @@ public class DataSetManager : MonoBehaviour
     /// </summary>
 
     // a class for easily storing information about menu tabs as they are created
-    protected class SetElement : MonoBehaviour
+    public class SetElement : MonoBehaviour
     {
         [SerializeField]
         private RectTransform m_RectTransform;
@@ -58,16 +58,25 @@ public class DataSetManager : MonoBehaviour
     [SerializeField] private HorizontalLayoutGroup m_TemplateLayoutGroup;
     public HorizontalLayoutGroup templateLayoutGroup { get { return m_TemplateLayoutGroup; } set { m_TemplateLayoutGroup = value; } }
 
+    /// <summary>
+    /// a reference to the Button object the template is using
+    /// </summary>
+    [SerializeField] private Button m_TemplateButton;
+    public Button templateButton { get { return m_TemplateButton; } set { m_TemplateButton = value; } }
+
+    /// <summary>
+    /// a reference to the Toggle object the template is using
+    /// </summary>
+    [SerializeField] private Toggle m_TemplateToggle;
+    public Toggle templateToggle { get { return m_TemplateToggle; } set { m_TemplateToggle = value; } }
+
     [Space]
 
     /// <summary>
     /// the list containing all of different menus you want to be able to select
     /// </summary>
-    [SerializeField] private List<MenuData> m_Menus;
-    public List<MenuData> MenuList { get { return m_Menus; } set { m_Menus = value; } }
-
-    private List<MenuTab> m_Items = new List<MenuTab>();
-    private MenuTab m_SelectedTab;
+    private List<SetElement> m_DebrisSets;
+    public List<SetElement> debrisSets { get { return m_DebrisSets; } set { m_DebrisSets = value; } }
 
 
     private bool validTemplate = false;
@@ -76,37 +85,39 @@ public class DataSetManager : MonoBehaviour
     {
         validTemplate = false;
 
-        if (!m_Template)
+        if (!m_SetTemplate)
         {
             Debug.LogError("The MenuTab template is not assigned. The template needs to be assigned and must have a child GameObject with a Button component serving as the item.", this);
             return;
         }
 
-        GameObject templateGo = m_Template.gameObject;
+        GameObject templateGo = m_SetTemplate.gameObject;
         templateGo.SetActive(true);
-        Button itemButton = m_Template.GetComponent<Button>();
+        Button itemButton = m_SetTemplate.GetComponent<Button>();
+        HorizontalLayoutGroup layoutGroup = m_SetTemplate.GetComponent<HorizontalLayoutGroup>();
 
         validTemplate = true;
         if (!itemButton)
         {
             validTemplate = false;
-            Debug.LogError("The MenuTab template is not valid. The template must have a Button component.", template);
+            Debug.LogError("The SetElement template is not valid. The template must have a Button component.", setTemplate);
+        }
+        else if (!itemButton)
+        {
+            validTemplate = false;
+            Debug.LogError("The SetElement template is not valid. The template must have a Horizontal Layout Group component.", setTemplate);
         }
         else if (!(itemButton.transform.parent is RectTransform))
         {
             validTemplate = false;
-            Debug.LogError("The MenuTab template is not valid. The template GameObject must have a RectTransform on its parent.", template);
+            Debug.LogError("The SetElement template is not valid. The template GameObject must have a RectTransform on its parent.", setTemplate);
         }
         else if (text != null && !text.transform.IsChildOf(templateGo.transform))
         {
             validTemplate = false;
-            Debug.LogError("The MenuTab template is not valid. The Item Text must be on the template GameObject or children of it.", template);
+            Debug.LogError("The SetElement template is not valid. The Item Text must be on the template GameObject or children of it.", setTemplate);
         }
-        else if (image != null && !image.transform.IsChildOf(templateGo.transform))
-        {
-            validTemplate = false;
-            Debug.LogError("The MenuTab template is not valid. The Item Image must be on the template GameObject or children of it.", template);
-        }
+
 
         if (!validTemplate)
         {
@@ -114,11 +125,13 @@ public class DataSetManager : MonoBehaviour
             return;
         }
 
-        MenuTab item = templateGo.AddComponent<MenuTab>();
-        item.text = m_Text;
-        item.image = m_Image;
-        item.button = itemButton;
+        SetElement item = templateGo.AddComponent<SetElement>();
         item.rectTransform = (RectTransform)templateGo.transform;
+        item.dropdownLayoutGroup = layoutGroup;
+        item.text = m_Text;
+        item.deleteButton = itemButton;
+
+        item.fields = new List<Dropdown>();
 
 
         validTemplate = true;
@@ -138,7 +151,7 @@ public class DataSetManager : MonoBehaviour
             if (!validTemplate) return;
         }
 
-        MenuTab itemTemplate = m_Template.GetComponent<MenuTab>();
+        SetElement itemTemplate = m_SetTemplate.GetComponent<SetElement>();
 
         for (int i = 0; i < m_Menus.Count; i++)
         {
@@ -149,25 +162,6 @@ public class DataSetManager : MonoBehaviour
                 continue;
 
             m_Items.Add(tab);
-        }
-
-        // reposition all menu tabs now that they have all been added
-
-        GameObject content = itemTemplate.rectTransform.parent.gameObject;
-        RectTransform contentRectTransform = content.transform as RectTransform;
-        int numMenus = m_Items.Count;
-        float menuFraction = (1f / numMenus);
-
-        for (int i = 0; i < numMenus; i++)
-        {
-            RectTransform itemRect = m_Items[i].rectTransform;
-            itemRect.anchorMin = new Vector2(i * menuFraction, 0);
-            itemRect.anchorMax = new Vector2((i + 1) * menuFraction, 1);
-
-            itemRect.anchoredPosition = Vector2.zero;
-
-            itemRect.offsetMin = Vector2.zero;
-            itemRect.offsetMax = Vector2.zero;
         }
 
         m_Template.gameObject.SetActive(false);
