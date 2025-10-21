@@ -41,14 +41,14 @@ public class DataSetReader
 
 			for (int i = 0; i < headers.Length; i++)
 			{
-				try
-				{
-					DebrisParameter parameter;
-					Enum.TryParse(headers[i].Trim(), true, out parameter);
+                try
+                {
+                    DebrisParameter parameter;
+                    Enum.TryParse(headers[i].Trim(), true, out parameter);
                     parameters[i] = parameter.ToString();
 				}
-				catch (Exception e)
-				{
+				catch (Exception)
+                {
 					parameters[i] = "NULL";
 				}
 			}
