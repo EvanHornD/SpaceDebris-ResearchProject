@@ -25,12 +25,12 @@ public class Parameter : MonoBehaviour
 
 	private void Start()
 	{
-		initialize("NULL");
+		initialize("ParamTest");
 	}
 
 	public void initialize(string parameter) 
 	{
-
+		header.text = parameter;
 
 		string[] names = Enum.GetNames(typeof(DebrisParameter));
 		int parameterIndex = -1;
