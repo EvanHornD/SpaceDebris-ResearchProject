@@ -2,9 +2,7 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 using System.Text;
-using Unity.VisualScripting;
-
-
+using UnityEngine;
 
 public class ConfigManager
 {
@@ -19,47 +17,48 @@ public class ConfigManager
 		initConfig();
 	}
 
-	//#region initialization
+	#region initialization
 	public void initConfig()
 	{
 		if (!File.Exists(configFilePath)) 
 		{
-            Console.WriteLine("Config File not found at: " + configFilePath);
+            Debug.Log("Config File not found at: " + configFilePath);
 			createFile();
             indexMap = new Dictionary<string, int>();
 			return;
         }
 		using (StreamReader configReader = new StreamReader(configFilePath))
 		{
-			indexFile(configReader);
+            indexFile(configReader);
 		}
 	}
 
+
 	private void indexFile(StreamReader fileReader)
 	{
-		bool invalidConfigFile = false;
+        bool invalidConfigFile = false;
 		string line;
 		string line2;
 		indexMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 		configs = new List<Config>();
-		while ((line = fileReader.ReadLine().Trim()) != null && (line2 = fileReader.ReadLine().Trim()) != null)
+		while ((line = fileReader.ReadLine()) != null && (line2 = fileReader.ReadLine()) != null)
 		{
 			try
 			{
 				Config newConfig = new Config(line, line2);
 				configs.Add(newConfig);
-				indexMap[line] = configs.Count - 1;
+				indexMap[line.Trim()] = configs.Count - 1;
 			}
 			catch (InvalidFileTypeException e) 
 			{
 				invalidConfigFile = true;
-				Console.WriteLine("Invalid Config:" + line + e.ToString());
+				Debug.Log("Invalid Config:" + line + e.ToString());
 				continue;
 			}
 			catch ( InvalidParameterException e) 
 			{
 				invalidConfigFile = true;
-				Console.WriteLine("Invalid Config:" + line + e.ToString());
+				Debug.Log("Invalid Config:" + line + e.ToString());
 				continue;
 			}
 		}
@@ -75,7 +74,7 @@ public class ConfigManager
 		}
 		catch (IOException e)
 		{
-			Console.WriteLine(e.ToString());
+			Debug.Log(e.ToString());
 		}
 	}
 
@@ -90,9 +89,9 @@ public class ConfigManager
 
 		File.WriteAllText(configFilePath, fileString.ToString());
     }
-	//#endregion
+	#endregion
 
-	//#region  changing config file
+	#region  changing config file
 	public void changeConfig(string fileName, string[] headerNames) {
 
 		string configString = string.Join(",", headerNames);
@@ -101,12 +100,12 @@ public class ConfigManager
 		try { configChange = new Config(fileName, configString); }
 		catch (InvalidFileTypeException e)
 		{
-			Console.WriteLine("Invalid Config:" + fileName + e.ToString());
+			Debug.Log("Invalid Config:" + fileName + e.ToString());
 			return;
 		}
 		catch (InvalidParameterException e)
 		{
-			Console.WriteLine("Invalid Config:" + configString + e.ToString());
+			Debug.Log("Invalid Config:" + configString + e.ToString());
 			return;
 		}
 
@@ -183,11 +182,23 @@ public class ConfigManager
 		return configString.ToString();
 	}
 
-	//#endregion
+	#endregion
+
+	public string[] getConfigFilePaths() 
+	{
+		string[] filePaths = new string[configs.Count];
+
+        for (int i = 0; i < configs.Count; i++)
+        {
+            filePaths[i] = configs[i].configFilePath;
+        }
+
+		return filePaths;
+    }
+
 
 	public DebrisParameter[] getConfigParameters(string filePath)
 	{
-
 		string[] stringParameters = configs[indexMap[filePath]].configuration.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
 		DebrisParameter[] parameters = new DebrisParameter[stringParameters.Length];

@@ -2,6 +2,7 @@ using System.IO;
 using System;
 using UnityEngine;
 
+
 public class DataSetReader
 {
 
@@ -9,9 +10,10 @@ public class DataSetReader
 	{
         if (!File.Exists(fileLocation))
         {
-            Console.WriteLine("DataSet File not found at: " + fileLocation);
 			throw new FileNotFoundException();
         }
+
+
 
         using (StreamReader dataSetReader = new StreamReader(fileLocation))
         {
@@ -24,15 +26,22 @@ public class DataSetReader
                 return false;
             }
 
+
             while ((line = dataSetReader.ReadLine()) != null)
             {
-                if ((line.Split(",").Length - 1) != numCommas) return false;
+				if (line.Length == 0) continue;
+				if ((line.Split(",").Length - 1) != numCommas) 
+				{
+                    Debug.Log("Line: " + line + " doesnt have the same number of elements as the header");
+					return false; 
+				}
             }
             return true;
         }
 	}
 
-	public static string[] parseHeader(string fileLocation) // probably useless
+
+	public static string[] parseHeader(string fileLocation)
 	{
 		using (StreamReader dataSetReader = new StreamReader(fileLocation))
 		{
@@ -58,6 +67,12 @@ public class DataSetReader
 
     public static string[] getHeader(string fileLocation)
     {
+        if (!File.Exists(fileLocation))
+        {
+            Console.WriteLine("DataSet File not found at: " + fileLocation);
+            throw new FileNotFoundException();
+        }
+
         using (StreamReader dataSetReader = new StreamReader(fileLocation))
         {
             string[] headers = dataSetReader.ReadLine().Split(",");

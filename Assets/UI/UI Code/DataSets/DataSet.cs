@@ -1,3 +1,4 @@
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,11 +12,9 @@ public class DataSet : MonoBehaviour
     [SerializeField]
     HorizontalLayoutGroup horizontalLayoutGroup;
 
-    [SerializeField]
-    Button DeleteButton;
+    public Button deleteButton;
 
-    [SerializeField]
-    Toggle toggle;
+    public Toggle toggle;
     #endregion
 
     [Space]
@@ -28,15 +27,13 @@ public class DataSet : MonoBehaviour
     [SerializeField]
     GameObject placeHolderVisual;
 
+    [HideInInspector]
+    public string dataSetName;
+
     private void Start()
     {
         if (placeHolderVisual == null) return;
         Destroy(placeHolderVisual);
-    }
-
-    private void Awake()
-    {
-        init("test config",new string[] { "name", "inclination", "eccentricity", "type", "sisterDebris" });
     }
 
     private Parameter[] parameters;
@@ -45,9 +42,10 @@ public class DataSet : MonoBehaviour
     public DebrisParameter[] headerParameters;
 
 
-    public void init(string fileName, string[] parameterNames) 
+    public void init(string fileName, string[] parameterNames, DebrisParameter[] headerParameters) 
     {
-        header.text = fileName;
+        dataSetName = fileName;
+        header.text = Path.GetFileName(fileName);
 
         parameters = new Parameter[parameterNames.Length];
         headerParameters = new DebrisParameter[parameterNames.Length];

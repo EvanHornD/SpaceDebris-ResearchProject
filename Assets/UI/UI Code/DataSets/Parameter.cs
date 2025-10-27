@@ -27,6 +27,7 @@ public class Parameter : MonoBehaviour
 
     public void initialize(string parameter, int paramNumber, DebrisParameter[] headerParameters) 
 	{
+		this.headerParameters = headerParameters;
 		this.paramNumber = paramNumber;
 		header.text = parameter;
 
