@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class DataSetManager : MonoBehaviour
@@ -14,19 +15,40 @@ public class DataSetManager : MonoBehaviour
 	[SerializeField]
 	Button addDataSetButton;
 
-	#endregion
+    #endregion
 
-	#region Prefabs
-	[SerializeField]
+    [Space]
+
+    #region Prefabs
+
+    [SerializeField]
 	DataSet dataSetPrefab;
+
+    #endregion
+
+    [Space]
+
+    #region filePaths
+
+    [SerializeField]
+	string configFilePath;
+    [SerializeField]
+	List<string> dataSetsToAdd = new List<string>();
+
 	#endregion
 
-	[SerializeField]
-	string configFilePath;
+	[Space]
 
-	public List<string> dataSetsToAdd = new List<string>();
+    #region Events
 
-	private ConfigManager configManager;
+    [SerializeField]
+    UnityEvent<string> loadDataSet;
+    [SerializeField]
+    UnityEvent<string> unloadDataSet;
+
+    #endregion
+
+    private ConfigManager configManager;
 
 	private List<DataSet> dataSets = new List<DataSet>();
 
@@ -61,7 +83,7 @@ public class DataSetManager : MonoBehaviour
 			dataSets.Add(dataSet);
 
 			dataSet.deleteButton.onClick.AddListener(() => removeDataSet(dataSet));
-			dataSet.toggle.onValueChanged.AddListener(toggleDataSet);
+			dataSet.toggle.onValueChanged.AddListener((load) => toggleDataSet(load, dataSet.getName()));
 			dataSet.manager = this;
 
 			dataSet.transform.SetParent(verticalLayoutGroup.transform);
@@ -74,16 +96,23 @@ public class DataSetManager : MonoBehaviour
 		configManager.changeConfig(fileName, headers);
 	}
 
-    // todo create the ability to send 
-    public void toggleDataSet(bool loadDataSet) 
+    public void toggleDataSet(bool load, string dataSetName) 
 	{
-        Debug.Log("Unimplemented Function");
+		if (load)
+		{
+			loadDataSet.Invoke(dataSetName);
+		}
+        else
+        {
+			unloadDataSet.Invoke(dataSetName);
+        }
     }
 
 	public void removeDataSet(DataSet dataSet) 
 	{
 		configManager.removeConfig(dataSet.getName());
 		dataSets.Remove(dataSet);
+		unloadDataSet.Invoke(dataSet.getName());
 		Destroy(dataSet.gameObject);
 	}
 
