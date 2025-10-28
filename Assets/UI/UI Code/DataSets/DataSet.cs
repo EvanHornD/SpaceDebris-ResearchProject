@@ -27,20 +27,23 @@ public class DataSet : MonoBehaviour
     [SerializeField]
     GameObject placeHolderVisual;
 
-    [HideInInspector]
-    public string dataSetName;
-
     private void Start()
     {
         if (placeHolderVisual == null) return;
         Destroy(placeHolderVisual);
     }
-
+    [HideInInspector]
+    public DataSetManager manager;
     private Parameter[] parameters;
 
-    [HideInInspector]
-    public DebrisParameter[] headerParameters;
+    private string dataSetName;
+    private DebrisParameter[] headerParameters;
 
+
+    public string getName() 
+    {
+        return dataSetName;
+    }
 
     public void init(string fileName, string[] parameterNames, DebrisParameter[] headerParameters) 
     {
@@ -48,24 +51,23 @@ public class DataSet : MonoBehaviour
         header.text = Path.GetFileName(fileName);
 
         parameters = new Parameter[parameterNames.Length];
-        headerParameters = new DebrisParameter[parameterNames.Length];
+        this.headerParameters = headerParameters;
 
         for (int i = 0; i < parameterNames.Length; i++)
         {
             Parameter parameter = Instantiate(parameterPrefab);
             parameter.initialize(parameterNames[i], i, headerParameters);
 
+            parameter.parentDataSet = this;
             parameter.transform.SetParent(horizontalLayoutGroup.transform);
-            parameter.updatedParameter.AddListener(parameterUpdated);
             parameters[i] = parameter;
         }
     }
 
-    private void parameterUpdated() 
+    public void parameterUpdated()
     {
-
+        manager.updateDataSet(dataSetName, headerParameters);
     }
-
 }
 
 

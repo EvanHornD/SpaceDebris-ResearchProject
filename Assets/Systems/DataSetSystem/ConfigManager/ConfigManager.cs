@@ -92,7 +92,8 @@ public class ConfigManager
 	#endregion
 
 	#region  changing config file
-	public void changeConfig(string fileName, string[] headerNames) {
+	public void changeConfig(string fileName, string[] headerNames) 
+	{
 
 		string configString = string.Join(",", headerNames);
 
@@ -123,7 +124,18 @@ public class ConfigManager
         }
 	}
 
-	private string addConfig(Config config)
+    public void changeConfig(string fileName, DebrisParameter[] headerNames)
+	{
+		string[] headers = new string[headerNames.Length];
+        for (int i = 0; i < headerNames.Length; i++)
+        {
+			headers[i] = headerNames[i].ToString().Trim().ToUpper();
+        }
+		changeConfig(fileName, headers);
+    }
+
+
+    private string addConfig(Config config)
 	{
 		string stringBeforeConfig = getstringBeforeConfig(configs.Count);
 		configs.Add(config);
@@ -205,8 +217,10 @@ public class ConfigManager
 
 		for (int i = 0; i < stringParameters.Length; i++)
 		{
-			if (!Enum.TryParse<DebrisParameter>(stringParameters[i], false, out parameters[i]))
-				parameters[i] = DebrisParameter.NULL;
+			if (!Enum.TryParse(stringParameters[i].Trim().ToUpper(), false, out parameters[i])) 
+			{
+                parameters[i] = DebrisParameter.NULL;
+            }
 		}
 		return parameters;
 	}

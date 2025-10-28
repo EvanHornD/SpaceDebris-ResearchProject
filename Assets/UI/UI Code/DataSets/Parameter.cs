@@ -18,27 +18,20 @@ public class Parameter : MonoBehaviour
 	#endregion
 
 	[Space]
-
-	public UnityEvent updatedParameter;
-
+    [HideInInspector]
+    public DataSet parentDataSet;
 	private int paramNumber = 0;
-
 	private DebrisParameter[] headerParameters;
 
-    public void initialize(string parameter, int paramNumber, DebrisParameter[] headerParameters) 
+    public void initialize(string parameter, int paramNumber, DebrisParameter[] headerParameters)
 	{
 		this.headerParameters = headerParameters;
 		this.paramNumber = paramNumber;
 		header.text = parameter;
 
 		string[] names = Enum.GetNames(typeof(DebrisParameter));
-		int parameterIndex = -1;
-		if (names.Contains(parameter.Trim().ToUpper()))
-		{
-			parameterIndex = Array.IndexOf(names, parameter.Trim().ToUpper());
-		}
-		if (parameterIndex < 0) parameterIndex = names.Length - 1;
-        headerParameters[paramNumber] = (DebrisParameter)Enum.GetValues(typeof(DebrisParameter)).GetValue(parameterIndex);
+		int parameterIndex = Array.IndexOf(names, headerParameters[paramNumber].ToString());
+		if (parameterIndex == -1) parameterIndex = names.Length-1;
 
         dropdown.ClearOptions();
 		dropdown.AddOptions(new List<string>(names));
@@ -49,6 +42,6 @@ public class Parameter : MonoBehaviour
 	private void updateParameter(int num) 
 	{
 		headerParameters[paramNumber] = (DebrisParameter)Enum.GetValues(typeof(DebrisParameter)).GetValue(num);
-		updatedParameter.Invoke();
+		parentDataSet.parameterUpdated();
 	}
 }

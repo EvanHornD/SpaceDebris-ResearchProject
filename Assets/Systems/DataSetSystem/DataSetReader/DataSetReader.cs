@@ -50,13 +50,12 @@ public class DataSetReader
 
 			for (int i = 0; i < headers.Length; i++)
 			{
-                try
-                {
-                    DebrisParameter parameter;
-                    Enum.TryParse(headers[i].Trim(), true, out parameter);
+                DebrisParameter parameter;
+                if(Enum.TryParse(headers[i].Trim(), true, out parameter)) 
+				{
                     parameters[i] = parameter.ToString();
-				}
-				catch (Exception)
+                }
+				else
                 {
 					parameters[i] = "NULL";
 				}
@@ -69,7 +68,7 @@ public class DataSetReader
     {
         if (!File.Exists(fileLocation))
         {
-            Console.WriteLine("DataSet File not found at: " + fileLocation);
+            Debug.Log("DataSet File not found at: " + fileLocation);
             throw new FileNotFoundException();
         }
 

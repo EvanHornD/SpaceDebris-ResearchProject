@@ -28,7 +28,7 @@ public class DataSetManager : MonoBehaviour
 
 	private ConfigManager configManager;
 
-	private List<DataSet> dataSets;
+	private List<DataSet> dataSets = new List<DataSet>();
 
 	private void Awake()
 	{
@@ -55,15 +55,24 @@ public class DataSetManager : MonoBehaviour
         {
             DebrisParameter[] parsedHeaders = configManager.getConfigParameters(filePaths[i]);
 			string[] headers = DataSetReader.getHeader(filePaths[i]);
+
 			DataSet dataSet = Instantiate(dataSetPrefab);
 			dataSet.init(filePaths[i], headers, parsedHeaders);
+			dataSets.Add(dataSet);
+
 			dataSet.deleteButton.onClick.AddListener(() => removeDataSet(dataSet));
 			dataSet.toggle.onValueChanged.AddListener(toggleDataSet);
+			dataSet.manager = this;
 
 			dataSet.transform.SetParent(verticalLayoutGroup.transform);
+
         }
     }
 
+	public void updateDataSet(string fileName, DebrisParameter[] headers)
+	{
+		configManager.changeConfig(fileName, headers);
+	}
 
     // todo create the ability to send 
     public void toggleDataSet(bool loadDataSet) 
@@ -73,8 +82,9 @@ public class DataSetManager : MonoBehaviour
 
 	public void removeDataSet(DataSet dataSet) 
 	{
-		configManager.removeConfig(dataSet.dataSetName);
+		configManager.removeConfig(dataSet.getName());
 		dataSets.Remove(dataSet);
+		Destroy(dataSet.gameObject);
 	}
 
 	// todo implement the ability to open the file explorer and add a get a files path
