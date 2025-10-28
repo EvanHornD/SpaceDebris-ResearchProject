@@ -91,8 +91,10 @@ public class ConfigManager
     }
 	#endregion
 
+
+
 	#region  changing config file
-	public void changeConfig(string fileName, string[] headerNames) 
+	public bool changeConfig(string fileName, string[] headerNames) 
 	{
 
 		string configString = string.Join(",", headerNames);
@@ -102,12 +104,12 @@ public class ConfigManager
 		catch (InvalidFileTypeException e)
 		{
 			Debug.Log("Invalid Config:" + fileName + e.ToString());
-			return;
+			return false;
 		}
 		catch (InvalidParameterException e)
 		{
 			Debug.Log("Invalid Config:" + configString + e.ToString());
-			return;
+			return false;
 		}
 
 
@@ -116,10 +118,12 @@ public class ConfigManager
             if (!indexMap.ContainsKey(fileName))
             {
                 fileWriter.Write(addConfig(configChange));
+				return false;
             }
             else
             {
                 fileWriter.Write(replaceConfig(fileName, configChange));
+				return true;
             }
         }
 	}

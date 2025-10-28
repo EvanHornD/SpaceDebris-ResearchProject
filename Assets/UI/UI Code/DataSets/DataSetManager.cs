@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using SFB;
 
 public class DataSetManager : MonoBehaviour
 {
@@ -75,20 +76,24 @@ public class DataSetManager : MonoBehaviour
 
         for (int i = 0; i < filePaths.Length; i++)
         {
-            DebrisParameter[] parsedHeaders = configManager.getConfigParameters(filePaths[i]);
-			string[] headers = DataSetReader.getHeader(filePaths[i]);
-
-			DataSet dataSet = Instantiate(dataSetPrefab);
-			dataSet.init(filePaths[i], headers, parsedHeaders);
-			dataSets.Add(dataSet);
-
-			dataSet.deleteButton.onClick.AddListener(() => removeDataSet(dataSet));
-			dataSet.toggle.onValueChanged.AddListener((load) => toggleDataSet(load, dataSet.getName()));
-			dataSet.manager = this;
-
-			dataSet.transform.SetParent(verticalLayoutGroup.transform);
-
+			CreateDataSetElement(filePaths[i]);
         }
+    }
+
+	private void CreateDataSetElement(string filePath) 
+	{
+        DebrisParameter[] parsedHeaders = configManager.getConfigParameters(filePath);
+        string[] headers = DataSetReader.getHeader(filePath);
+
+        DataSet dataSet = Instantiate(dataSetPrefab);
+        dataSet.init(filePath, headers, parsedHeaders);
+        dataSets.Add(dataSet);
+
+        dataSet.deleteButton.onClick.AddListener(() => removeDataSet(dataSet));
+        dataSet.toggle.onValueChanged.AddListener((load) => toggleDataSet(load, dataSet.getName()));
+        dataSet.manager = this;
+
+        dataSet.transform.SetParent(verticalLayoutGroup.transform);
     }
 
 	public void updateDataSet(string fileName, DebrisParameter[] headers)
@@ -119,7 +124,33 @@ public class DataSetManager : MonoBehaviour
 	// todo implement the ability to open the file explorer and add a get a files path
 	private void addDataSet() 
 	{
-		Debug.Log("Unimplemented Function");
-	}
+		string filePath = getFile();
+
+		if (!DataSetReader.isCSV(filePath)) 
+		{
+			Debug.Log("invalid file type");
+		}
+
+        string[] headers = DataSetReader.parseHeader(filePath);
+        bool alreadyExists = configManager.changeConfig(filePath, headers);
+
+		if (alreadyExists) 
+		{
+            foreach (DataSet dataSet in dataSets )
+            {
+				if (dataSet.getName() == filePath) removeDataSet(dataSet);
+            }
+		}
+		CreateDataSetElement(filePath);
+    }
+
+	private string getFile() 
+	{
+        ExtensionFilter[] extensions = new ExtensionFilter[] {
+			new ExtensionFilter("Text", "txt", "csv")
+		};
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Select Data Set", "", extensions, false);
+		return paths[0];
+    }
 }
 
