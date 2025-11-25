@@ -28,7 +28,6 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        Vector2 position = Mouse.current.position.ReadValue();
         Vector2 normalized = new Vector2(position.x / Screen.width, position.y / Screen.height);
         previousMousePosition = normalized;
     }
@@ -57,7 +56,6 @@ public class CameraController : MonoBehaviour
 
     private void handleMouseInput()
     {
-        Vector2 position = Mouse.current.position.ReadValue();
         Vector2 normalized = new Vector2(position.x / Screen.width, position.y / Screen.height);
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
