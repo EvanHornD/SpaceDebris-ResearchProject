@@ -1,7 +1,4 @@
 using UnityEngine;
-using static SliderModifier;
-using static UnityEditor.PlayerSettings;
-
 public class ToggleableElement : MonoBehaviour
 {
 
@@ -9,12 +6,14 @@ public class ToggleableElement : MonoBehaviour
     RectTransform rectTransform;
     public enum Direction {Left, Right, Up, Down};
 
+    [SerializeField] bool startToggledOn = true;
     [SerializeField] bool MoveOnToggle = false;
     [SerializeField] Direction ToggleDirection = Direction.Right;
 
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
+        if (!startToggledOn) Toggle();
     }
 
     bool toggled = true;

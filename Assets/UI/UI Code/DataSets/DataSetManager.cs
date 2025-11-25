@@ -1,10 +1,10 @@
-using System;
+
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using SFB;
+using System.Security.Cryptography;
 
 public class DataSetManager : MonoBehaviour
 {
@@ -33,8 +33,6 @@ public class DataSetManager : MonoBehaviour
 
     [SerializeField]
 	string configFilePath;
-    [SerializeField]
-	List<string> dataSetsToAdd = new List<string>();
 
 	#endregion
 
@@ -43,27 +41,19 @@ public class DataSetManager : MonoBehaviour
     #region Events
 
     [SerializeField]
-    UnityEvent<string> loadDataSet;
+    UnityEvent<DataSetLoadRequest> loadDataSet;
     [SerializeField]
     UnityEvent<string> unloadDataSet;
 
     #endregion
 
     private ConfigManager configManager;
-
 	private List<DataSet> dataSets = new List<DataSet>();
+	bool fillWithRandomData = false;
 
 	private void Awake()
 	{
 		configManager = new ConfigManager(configFilePath);
-
-		foreach (string filePath in dataSetsToAdd)
-		{
-			if (!DataSetReader.isCSV(filePath)) continue; 
-
-			string[] headers = DataSetReader.parseHeader(filePath);
-			configManager.changeConfig(filePath, headers);
-		}
 
 		addDataSetButton.onClick.AddListener(addDataSet);
 
@@ -94,6 +84,7 @@ public class DataSetManager : MonoBehaviour
         dataSet.manager = this;
 
         dataSet.transform.SetParent(verticalLayoutGroup.transform);
+		addDataSetButton.transform.SetAsLastSibling();
     }
 
 	public void updateDataSet(string fileName, DebrisParameter[] headers)
@@ -105,7 +96,7 @@ public class DataSetManager : MonoBehaviour
 	{
 		if (load)
 		{
-			loadDataSet.Invoke(dataSetName);
+			loadDataSet.Invoke(new DataSetLoadRequest(configManager.getConfigParameters(dataSetName),dataSetName,fillWithRandomData));
 		}
         else
         {
@@ -121,7 +112,6 @@ public class DataSetManager : MonoBehaviour
 		Destroy(dataSet.gameObject);
 	}
 
-	// todo implement the ability to open the file explorer and add a get a files path
 	private void addDataSet() 
 	{
 		string filePath = getFile();
@@ -129,6 +119,7 @@ public class DataSetManager : MonoBehaviour
 		if (!DataSetReader.isCSV(filePath)) 
 		{
 			Debug.Log("invalid file type");
+			return;
 		}
 
         string[] headers = DataSetReader.parseHeader(filePath);
@@ -151,6 +142,23 @@ public class DataSetManager : MonoBehaviour
 		};
         string[] paths = StandaloneFileBrowser.OpenFilePanel("Select Data Set", "", extensions, false);
 		return paths[0];
+    }
+
+	public void toggleFillWithRandomData() 
+	{
+		fillWithRandomData = !fillWithRandomData;
+	}
+}
+public struct DataSetLoadRequest
+{
+    public DebrisParameter[] parameters;
+    public string dataSetFilePath;
+	public bool fillWithRandom;
+    public DataSetLoadRequest(DebrisParameter[] parameters, string dataSetFilePath, bool fillWithRandom = false)
+    {
+        this.parameters = parameters;
+        this.dataSetFilePath = dataSetFilePath;
+		this.fillWithRandom = fillWithRandom;
     }
 }
 

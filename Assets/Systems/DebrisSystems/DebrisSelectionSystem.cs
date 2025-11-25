@@ -5,6 +5,8 @@ public class DebrisSelectionSystem : MonoBehaviour
     private GameObject selectedDebris;
     public void selectDebris(GameObject debris)
     {
+        deselectDebris();
+        selectedDebris = debris;
         debris.GetComponent<DebrisSelector>().select(debris);
     }
 

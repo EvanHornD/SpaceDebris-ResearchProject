@@ -4,7 +4,7 @@ public class DebrisEventsHandler : MonoBehaviour
 {
     [SerializeField] public DebrisManagementSystem managementSystem;
     [SerializeField] public DebrisSelectionSystem selectionSystem;
-    [SerializeField] public DebrisSpawningSystem spawningSystem;
+    [SerializeField] public LegacyDebrisSpawningSystem spawningSystem;
 
     public void removeDebris(GameObject debris) 
     {

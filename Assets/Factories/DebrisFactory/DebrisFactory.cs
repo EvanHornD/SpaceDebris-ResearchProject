@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using UnityEngine;
 
 public class DebrisFactory: MonoBehaviour
@@ -6,14 +7,14 @@ public class DebrisFactory: MonoBehaviour
     public GameObject target;
     [SerializeField] public GameObject parentObject;
 
-    public GameObject createDebris(OrbitalData data) 
+    public GameObject createDebris(OrbitalData data, string name = "Debris") 
     {
         GameObject gameObject = Instantiate(debrisPrefab);
         if (parentObject != null) 
         {
             gameObject.transform.SetParent(parentObject.transform, false);
         }
-        gameObject.name = "Debris";
+        gameObject.name = name;
         OrbitalPath orbit = gameObject.GetComponent<OrbitalPath>();
 
         orbit.setTarget(target)

@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [CreateAssetMenu(fileName = "OrbitalData", menuName = "Scriptable Objects/OrbitalData")]
 public class OrbitalData : ScriptableObject

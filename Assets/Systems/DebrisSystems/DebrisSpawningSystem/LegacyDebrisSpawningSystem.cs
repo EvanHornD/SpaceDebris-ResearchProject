@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DebrisSpawningSystem : MonoBehaviour
+public class LegacyDebrisSpawningSystem : MonoBehaviour
 {
     [SerializeField] public DebrisManagementSystem managementSystem;
 
@@ -8,8 +8,6 @@ public class DebrisSpawningSystem : MonoBehaviour
     [SerializeField] public OrbitalParameters MEOParams;
     [SerializeField] public OrbitalParameters HEOParams;
     [SerializeField] public OrbitalParameters GEOParams;
-
-
 
     static float earthDiameter = 12756f;
 

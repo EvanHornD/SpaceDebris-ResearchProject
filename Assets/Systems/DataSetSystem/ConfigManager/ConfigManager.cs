@@ -212,7 +212,6 @@ public class ConfigManager
 		return filePaths;
     }
 
-
 	public DebrisParameter[] getConfigParameters(string filePath)
 	{
 		string[] stringParameters = configs[indexMap[filePath]].configuration.Split(',', StringSplitOptions.RemoveEmptyEntries);
